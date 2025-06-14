@@ -33,7 +33,7 @@ banner_lines = [
     "   \\_/\\___/ \\___/|_|\\___|  \\__\\___/|_|_| |_| |_|\\__,_|\\___|_|   ",
     "                _/ |                                            ",
     "               |__/                                             ",
-    "                     Trinity Legion Exploit Scanner             "
+    "                     Trinity Legion Exploit Scanner Sql          "
 ]
 
 # Animasi print banner
