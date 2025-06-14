@@ -1,6 +1,7 @@
-# /usr/lib/python
-# Kirnath Morscheck
-# ZeroByte.ID
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+#
+# Created By : Trinity Legion
 
 import sys
 import requests
@@ -8,71 +9,83 @@ import urllib3
 import time
 from termcolor import colored
 
+# Matikan warning SSL
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 requests.packages.urllib3.disable_warnings()
 
 class warna:
-	HEADER = '\033[95m'
-	BLUE = '\033[94m'
-	GREEN = '\033[92m'
-	WARNING = '\033[93m'
-	FAIL = '\033[91m'
-	ENDC = '\033[0m'
-	BOLD = '\033[1m'
-	UNDERLINE = '\033[4m'
-merah = "\033[01;31m{0}\033[00m"
-hijau = "\033[01;35m{0}\033[00m"
+    HEADER    = '\033[95m'
+    BLUE      = '\033[94m'
+    GREEN     = '\033[92m'
+    WARNING   = '\033[93m'
+    FAIL      = '\033[91m'
+    ENDC      = '\033[0m'
+    BOLD      = '\033[1m'
+    UNDERLINE = '\033[4m'
 
-w 		= merah.format(" _   ___                  _   _     \n")
-gans 	= merah.format("| | / (_)                | | | |    \n")
-sangat 	= merah.format("| |/ / _ _ __ _ __   __ _| |_| |__  \n")
-kirnath = merah.format("|    \| | '__| '_ \ / _` | __| '_ \ \n")
-coded 	= merah.format("| |\  \ | |  | | | | (_| | |_| | | |\n")
-me 		= merah.format("\_| \_/_|_|  |_| |_|\__,_|\__|_| |_|\n")
-exit = "[========]"
-for l in w:
-	sys.stdout.write(l)
-	sys.stdout.flush()
-	time.sleep(0.005)
-for l in gans:
-	sys.stdout.write(l)
-	sys.stdout.flush()
-	time.sleep(0.005)
-for l in sangat:
-	sys.stdout.write(l)
-	sys.stdout.flush()
-	time.sleep(0.005)
-for l in coded:
-	sys.stdout.write(l)
-	sys.stdout.flush()
-	time.sleep(0.005)
-for l in me:
-	sys.stdout.write(l)
-	sys.stdout.flush()
-	time.sleep(0.005)
-print hijau.format("                       ZeroByte.ID\n")
+# ASCII art baru untuk "Trinity Legion"
+banner_lines = [
+    "  _____           _        _        _               _           ",
+    " |_   _|         (_)      | |      (_)             | |          ",
+    "   | | ___   ___  _  ___  | |_ ___  _ _ __ ___   __| | ___ _ __ ",
+    "   | |/ _ \\ / _ \\| |/ _ \\ | __/ _ \\| | '_ ` _ \\ / _` |/ _ \\ '__|",
+    "   | | (_) | (_) | |  __/ | || (_) | | | | | | | (_| |  __/ |   ",
+    "   \\_/\\___/ \\___/|_|\\___|  \\__\\___/|_|_| |_| |_|\\__,_|\\___|_|   ",
+    "                _/ |                                            ",
+    "               |__/                                             ",
+    "                     Trinity Legion Exploit Scanner             "
+]
+
+# Animasi print banner
+for line in banner_lines:
+    for ch in line + "\n":
+        sys.stdout.write(ch)
+        sys.stdout.flush()
+        time.sleep(0.005)
+
+print()  # satu baris kosong setelah banner
 
 def main():
-	print warna.WARNING + "[!] Enter site without http:// or https:// (e.g google.com)" + warna.ENDC
-	site = str(raw_input("[+] Enter Site: "))
-	time.sleep(2)
-	print warna.GREEN + "[+] Processing ",site + warna.ENDC
-	listed = open('data.txt', 'r')
-	head   = {'User-Agent':'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1'}
-	baca   = listed.read().split('\n')
-	for i in baca:
-		process = requests.get('http://{}{}'.format(site,i), headers=head, verify=False)
-		status = str(process.status_code)
-		if "200" in status:
-			print warna.GREEN + "[+] Yeay! I've Found it!\n[+] ",process.url + warna.ENDC
-			keluar = str(raw_input("[+] Do you want to exit?(y/n): "))
-			if keluar =="y":
-				print warna.GREEN + "[+] Job Done! Bye honeey <3 :) ...." + warna.ENDC
-				sys.exit()
-			else:
-				print warna.FAIL + "[+] FUUCCKKK YOU -_- i'm tired -_-"
-				continue
-		else:
-			print warna.FAIL + "[!] ",process.url + " Not Found !" + warna.ENDC
-	print "[+] Job Done, and i'm tired :( let me sleep Okay."
-main()
+    print(warna.WARNING + "[!] Masukkan domain tanpa http:// atau https:// (contoh: example.com)" + warna.ENDC)
+    site = input("[+] Enter Site: ").strip()
+    time.sleep(1)
+    print(warna.GREEN + "[+] Processing: " + site + warna.ENDC)
+
+    try:
+        with open('data.txt', 'r') as f:
+            paths = [line.strip() for line in f if line.strip()]
+    except FileNotFoundError:
+        print(warna.FAIL + "[-] File data.txt tidak ditemukan." + warna.ENDC)
+        sys.exit(1)
+
+    headers = {
+        'User-Agent': (
+            "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) "
+            "AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 "
+            "Mobile/15A372 Safari/604.1"
+        )
+    }
+
+    for path in paths:
+        url = f'http://{site}{path}'
+        try:
+            resp = requests.get(url, headers=headers, verify=False, timeout=10)
+        except requests.RequestException:
+            print(warna.FAIL + f"[!] {url} — Request failed" + warna.ENDC)
+            continue
+
+        if resp.status_code == 200:
+            print(warna.GREEN + "[+] Yeay! Found it:\n    " + resp.url + warna.ENDC)
+            keluar = input("[+] Mau berhenti? (y/n): ").strip().lower()
+            if keluar == 'y':
+                print(warna.GREEN + "[+] Job Done! Bye! 😊" + warna.ENDC)
+                sys.exit(0)
+            else:
+                print(warna.FAIL + "[!] Lanjut scanning..." + warna.ENDC)
+        else:
+            print(warna.FAIL + f"[!] {url} — Not Found ({resp.status_code})" + warna.ENDC)
+
+    print("[+] Selesai, bye! 😴")
+
+if __name__ == "__main__":
+    main()
